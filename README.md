@@ -1,4 +1,4 @@
-# Propeller Aero
+# PA
 
 ## Prerequisites
 
