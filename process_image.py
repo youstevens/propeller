@@ -26,8 +26,8 @@ def write_file(output_filepath, im, begin, end):
     """
 
     # setting the output_filename to the coordinates you are generating
-    output_file = output_filepath + "/" + \
-        str(begin[0]) + "_" + str(begin[1]) + ".jpg"
+    output_filename = str(begin[0]) + "_" + str(begin[1]) + ".jpg"
+    output_file = os.path.join(output_filepath, output_filename)
 
     # creating cropping area
     box = (begin[0], begin[1], end[0], end[1])
@@ -41,7 +41,7 @@ def write_file(output_filepath, im, begin, end):
     output_im.save(output_file, "JPEG")
 
 
-def processImg(im, level_count, num_of_tiles_across, num_of_tiles_down, output_dir):
+def process_img(im, level_count, num_of_tiles_across, num_of_tiles_down, output_dir):
     """
         Processes the provided image based on the number of calculated across and down tiles
         passed in
@@ -61,7 +61,7 @@ def processImg(im, level_count, num_of_tiles_across, num_of_tiles_down, output_d
         while tile_count_x < num_of_tiles_across:
             print(".", end="")
 
-            output_filepath = output_dir + "/" + str(level_count)
+            output_filepath = os.path.join(output_dir, str(level_count))
             if not os.path.exists(output_filepath):
                 # creating the level folder e.g. 0
                 os.makedirs(output_filepath)
@@ -153,7 +153,7 @@ def process_image_file(input_file, output_dir):
             # loop through to fork/spawn new processes to handle creating the tiles
             for imageObj in imageObjList:
                 # process the provided image against the current level
-                Process(target=processImg, args=(
+                Process(target=process_img, args=(
                     imageObj["im"], imageObj["level_count"], imageObj["num_of_tiles_across"], imageObj["num_of_tiles_down"], imageObj["output_dir"])).start()
 
     except IOError:
@@ -184,7 +184,7 @@ def main():
     _folder_name, _extension = os.path.splitext(output_folder_name)
 
     # Decide where to store the outputted files in
-    output_dir = build_dir + "/" + _folder_name
+    output_dir = os.path.join(build_dir, _folder_name)
 
     # Start processing the file
     process_image_file(input_file, output_dir)
